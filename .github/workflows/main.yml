@@ -4,18 +4,40 @@ on: [push]
 
 jobs:
   build:
+    name: Upload Release Asset
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Build
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Build project
         run: python ./build.py local
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            build/local/total-conversion-build.meta.js
-            build/local/total-conversion-build.user.js
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+        with:
+          tag_name: latest
+          release_name: Release latest
+          draft: false
+          prerelease: true
+      - name: Upload Release Meta Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./build/local/total-conversion-build.meta.js
+          asset_name: total-conversion-build.meta.js
+          asset_content_type: text/javascript
+      - name: Upload Release User Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./build/local/total-conversion-build.user.js
+          asset_name: total-conversion-build.user.js
+          asset_content_type: text/javascript
