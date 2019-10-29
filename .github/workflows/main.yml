@@ -1,0 +1,20 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Build
+        run: python ./build.py local
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/local/total-conversion-build.meta.js
+            build/local/total-conversion-build.user.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
