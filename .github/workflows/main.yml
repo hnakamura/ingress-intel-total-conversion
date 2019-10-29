@@ -13,7 +13,7 @@ jobs:
         run: python ./build.py local
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -23,7 +23,7 @@ jobs:
           prerelease: true
       - name: Upload Release Meta Asset
         id: upload-release-asset-meta
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -33,7 +33,7 @@ jobs:
           asset_content_type: text/javascript
       - name: Upload Release User Asset
         id: upload-release-asset-user
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
